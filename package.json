@@ -34,9 +34,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/YOUR_USERNAME/cadence-kit.git"
+    "url": "https://github.com/bolusdev/cadence-kit.git"
   },
-  "homepage": "https://github.com/YOUR_USERNAME/cadence-kit#readme",
+  "homepage": "https://github.com/bolusdev/cadence-kit#readme",
   "engines": {
     "node": ">=14"
   }

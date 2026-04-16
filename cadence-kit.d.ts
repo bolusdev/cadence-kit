@@ -105,4 +105,3 @@ export interface CadenceKitFactory {
 declare const cadenceKit: CadenceKitFactory;
 
 export default cadenceKit;
-export = cadenceKit;
