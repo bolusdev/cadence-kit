@@ -1,0 +1,43 @@
+{
+  "name": "cadence-kit",
+  "version": "3.0.0",
+  "description": "TTS-powered speech timing for LLM text rendering",
+  "main": "cadence-kit.js",
+  "types": "cadence-kit.d.ts",
+  "files": [
+    "cadence-kit.js",
+    "cadence-kit.d.ts",
+    "cadence-kit.config.js",
+    "cadence_kit.dart",
+    "demo.html",
+    "server/proxy.js",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "jest",
+    "proxy": "node server/proxy.js"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": ["<rootDir>/tests/**/*.test.js"]
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": { "optional": true }
+  },
+  "keywords": ["llm", "animation", "cadence", "speech", "elevenlabs", "tts", "typing"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/cadence-kit.git"
+  },
+  "homepage": "https://github.com/YOUR_USERNAME/cadence-kit#readme",
+  "engines": {
+    "node": ">=14"
+  }
+}

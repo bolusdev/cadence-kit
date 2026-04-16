@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadence Kit</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #f6f8fa;
+      --card:       #ffffff;
+      --border:     #d0d7de;
+      --border2:    #e8eaed;
+      --text:       #1f2328;
+      --muted:      #656d76;
+      --subtle:     #afb8c1;
+      --accent:     #4f46e5;
+      --accent-s:   #ede9fe;
+      --success:    #1a7f37;
+      --error:      #cf222e;
+      --warn:       #9a6700;
+      --radius:     10px;
+      --output-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 20px 80px;
+    }
+
+    /* ── Header ─────────────────────────────────────────────── */
+    .header { text-align: center; margin-bottom: 32px; }
+    .header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -.02em;
+      margin-bottom: 4px;
+    }
+    .header p { font-size: 0.85rem; color: var(--muted); }
+    .badge {
+      display: inline-flex;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: var(--accent-s);
+      color: var(--accent);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      vertical-align: middle;
+      margin-left: 6px;
+    }
+
+    /* ── Card ───────────────────────────────────────────────── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 1px 3px rgba(31,35,40,.06), 0 8px 32px rgba(31,35,40,.05);
+      padding: 32px;
+      width: 100%;
+      max-width: 660px;
+    }
+
+    /* ── Field ──────────────────────────────────────────────── */
+    .field { margin-bottom: 22px; }
+    .field:last-child { margin-bottom: 0; }
+    .label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 8px;
+    }
+    .label-note {
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: var(--subtle);
+      text-transform: none;
+      letter-spacing: 0;
+      margin-left: 5px;
+    }
+    hr { border: none; border-top: 1px solid var(--border2); margin: 22px 0; }
+
+    /* ── Inputs ─────────────────────────────────────────────── */
+    input[type="password"], textarea {
+      width: 100%;
+      padding: 9px 13px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    input[type="password"]:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(79,70,229,.1);
+    }
+    input[type="password"]::placeholder, textarea::placeholder { color: var(--subtle); }
+    textarea {
+      font-family: var(--output-font);
+      line-height: 1.75;
+      resize: vertical;
+      min-height: 140px;
+    }
+
+    /* ── Status ─────────────────────────────────────────────── */
+    #status { font-size: 0.78rem; min-height: 16px; margin-top: 7px; transition: color .2s; }
+    #status.loading { color: var(--muted); }
+    #status.ready   { color: var(--success); }
+    #status.error   { color: var(--error); }
+    #status.stale   { color: var(--warn); }
+
+    /* ── Pills ──────────────────────────────────────────────── */
+    .pill-row { display: flex; flex-wrap: wrap; gap: 5px; }
+    .pill {
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .12s;
+    }
+    .pill:hover { border-color: var(--text); color: var(--text); }
+    .pill.active { background: var(--accent-s); border-color: var(--accent); color: var(--accent); }
+    #presetDesc { font-size: 0.76rem; color: var(--subtle); min-height: 14px; margin-top: 7px; font-style: italic; }
+
+    /* ── Buttons ────────────────────────────────────────────── */
+    .btn {
+      padding: 8px 18px;
+      border-radius: var(--radius);
+      border: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .13s;
+      white-space: nowrap;
+    }
+    .btn:disabled { opacity: .38; cursor: default; }
+    .btn:not(:disabled):hover { opacity: .86; }
+    .btn-indigo  { background: var(--accent); color: #fff; }
+    .btn-green   { background: #1a7f37; color: #fff; }
+    .btn-outline {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border2);
+      padding: 5px 11px;
+      font-size: 0.76rem;
+    }
+    .btn-ghost:hover { border-color: var(--text); color: var(--text); }
+    .btn-ghost.active { border-color: var(--accent); color: var(--accent); background: var(--accent-s); }
+
+    /* ── Row utilities ──────────────────────────────────────── */
+    .row { display: flex; align-items: center; gap: 8px; }
+    .row-between { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .controls { display: flex; gap: 8px; margin: 20px 0 0; }
+
+    /* ── Annotate editor ────────────────────────────────────── */
+    #annotateView { display: none; }
+    #annotateEditor {
+      min-height: 140px;
+      padding: 9px 13px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      font-family: var(--output-font);
+      font-size: 0.875rem;
+      line-height: 1.75;
+      color: var(--text);
+      user-select: none;
+      cursor: default;
+    }
+    .wt { display: inline; border-radius: 2px; padding-bottom: 1px; transition: background .07s; }
+    .wt.sel  { background: rgba(79,70,229,.1); box-shadow: 0 2px 0 var(--accent); }
+    .wt.ann  { box-shadow: 0 2px 0 var(--ac); background: var(--ab); }
+
+    /* ── Annotation toolbar ─────────────────────────────────── */
+    #annoBar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 10px;
+      margin-top: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+    }
+    .al {
+      font-size: 0.66rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--subtle);
+      margin-right: 2px;
+      flex-shrink: 0;
+    }
+    .ab {
+      padding: 2px 9px;
+      border-radius: 12px;
+      border: 1px solid var(--ac, var(--border));
+      background: transparent;
+      color: var(--ac, var(--muted));
+      font-size: 0.72rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .ab:hover { opacity: .75; }
+    .sep { width: 1px; height: 14px; background: var(--border2); flex-shrink: 0; }
+    .au { display: flex; gap: 5px; margin-left: auto; }
+    #annoHint { font-size: 0.72rem; color: var(--subtle); margin-top: 6px; font-style: italic; min-height: 14px; }
+
+    /* ── Output ─────────────────────────────────────────────── */
+    #output {
+      min-height: 100px;
+      padding: 12px 13px;
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      background: var(--bg);
+      font-family: var(--output-font);
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: var(--text);
+    }
+    .ow { display: inline; opacity: 0; }
+    .ow.v { opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>Cadence Kit <span class="badge">V3</span></h1>
+    <p>TTS-powered speech timing for LLM text rendering</p>
+  </div>
+
+  <div class="card">
+
+    <!-- API -->
+    <div class="field">
+      <label class="label">ElevenLabs API Key</label>
+      <div class="row">
+        <input type="password" id="apiKey" placeholder="Paste your key — or set it in cadence-kit.config.js" autocomplete="off" style="flex:1" />
+        <button class="btn btn-indigo" id="fetchBtn">Fetch Timing</button>
+      </div>
+      <div id="status"></div>
+    </div>
+
+    <hr>
+
+    <!-- Default preset -->
+    <div class="field">
+      <label class="label">Default Preset <span class="label-note">— applied to un-annotated words</span></label>
+      <div class="pill-row" id="presetRow"></div>
+      <div id="presetDesc"></div>
+    </div>
+
+    <hr>
+
+    <!-- Text / Annotate -->
+    <div class="field">
+      <div class="row-between" style="margin-bottom:8px">
+        <label class="label" style="margin:0">Text</label>
+        <div class="row" style="gap:4px">
+          <button class="btn btn-ghost active" id="editBtn">Edit</button>
+          <button class="btn btn-ghost" id="annotateBtn">Annotate</button>
+        </div>
+      </div>
+
+      <div id="editView">
+        <textarea id="input">Not everything worth doing is hard. But the things that matter — they ask something of you.
+
+You already know what to do. You've always known. The question is never what. It's whether you're willing to begin.
+
+Every day is a chance. Not a guarantee. Just a chance.</textarea>
+      </div>
+
+      <div id="annotateView">
+        <div id="annotateEditor"></div>
+        <div id="annoBar">
+          <span class="al">Assign</span>
+          <!-- preset buttons injected by JS -->
+          <div class="sep"></div>
+          <div class="au">
+            <button class="btn btn-ghost" id="clearSelBtn">× Clear</button>
+            <button class="btn btn-ghost" id="exportBtn">↓ Export JSON</button>
+            <button class="btn btn-ghost" id="importBtn">↑ Import JSON</button>
+            <input type="file" id="importFile" accept=".json" style="display:none">
+          </div>
+        </div>
+        <div id="annoHint">Click and drag to select words, then assign a preset above.</div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Font -->
+    <div class="field">
+      <label class="label">Output Font</label>
+      <div class="pill-row" id="fontRow"></div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button class="btn btn-green" id="playBtn" disabled>Play</button>
+      <button class="btn btn-outline" id="resetBtn">Reset</button>
+    </div>
+
+    <!-- Output -->
+    <div style="margin-top:20px">
+      <label class="label" style="margin-bottom:8px">Output</label>
+      <div id="output"></div>
+    </div>
+
+  </div>
+
+  <script src="cadence-kit.config.js" onerror="window.CADENCE_KIT_CONFIG={}"></script>
+  <script>
+    // ── Config ──────────────────────────────────────────────────────────────
+    const CFG      = window.CADENCE_KIT_CONFIG || {};
+    const VOICE_ID = CFG.voiceId || '21m00Tcm4TlvDq8ikWAM';
+    const MODEL_ID = 'eleven_multilingual_v2';
+
+    // ── Presets ─────────────────────────────────────────────────────────────
+    const PRESETS = [
+      { id:'instant',        name:'Instant',        description:'No waiting. Words arrive immediately.',                    delayDivisor:3000, globalMultiplier:0.1,  minWordDelay:0,   lastWordDelay:300,  paragraphPause:150,  transitionMs:100,  blurPx:0, easing:'ease-out' },
+      { id:'swift',          name:'Swift',           description:'Fast and clean. Subtitle pace.',                           delayDivisor:1200, globalMultiplier:0.55, minWordDelay:40,  lastWordDelay:600,  paragraphPause:400,  transitionMs:140,  blurPx:0, easing:'ease-out' },
+      { id:'conversational', name:'Conversational',  description:'Natural speech pace. The default.',                        delayDivisor:700,  globalMultiplier:0.9,  minWordDelay:80,  lastWordDelay:900,  paragraphPause:700,  transitionMs:220,  blurPx:1, easing:'ease' },
+      { id:'deliberate',     name:'Deliberate',      description:'Measured. Every word gets its moment.',                    delayDivisor:600,  globalMultiplier:1.1,  minWordDelay:100, lastWordDelay:1000, paragraphPause:800,  transitionMs:280,  blurPx:2, easing:'ease' },
+      { id:'grounded',       name:'Grounded',        description:'Confident. Pauses land with weight. Crisp reveal.',        delayDivisor:500,  globalMultiplier:1.3,  minWordDelay:100, lastWordDelay:1100, paragraphPause:900,  transitionMs:180,  blurPx:0, easing:'ease-out' },
+      { id:'intimate',       name:'Intimate',        description:'Warm and close. Soft edges, unhurried.',                   delayDivisor:500,  globalMultiplier:1.4,  minWordDelay:110, lastWordDelay:1100, paragraphPause:950,  transitionMs:400,  blurPx:3, easing:'ease' },
+      { id:'dreamy',         name:'Dreamy',          description:'Words emerge from fog. Slow and soft.',                    delayDivisor:400,  globalMultiplier:1.6,  minWordDelay:130, lastWordDelay:1300, paragraphPause:1100, transitionMs:600,  blurPx:5, easing:'ease' },
+      { id:'poetic',         name:'Poetic',          description:'Very slow. Each word is an event.',                        delayDivisor:350,  globalMultiplier:2.0,  minWordDelay:150, lastWordDelay:1500, paragraphPause:1400, transitionMs:500,  blurPx:3, easing:'ease' },
+      { id:'reverent',       name:'Reverent',        description:'Ceremonial. Long silences. Words carry weight.',           delayDivisor:300,  globalMultiplier:2.5,  minWordDelay:180, lastWordDelay:2000, paragraphPause:1800, transitionMs:800,  blurPx:6, easing:'ease' },
+      { id:'meditative',     name:'Meditative',      description:'Ultra slow. Each word given space to breathe.',            delayDivisor:250,  globalMultiplier:3.5,  minWordDelay:220, lastWordDelay:2500, paragraphPause:2500, transitionMs:1200, blurPx:8, easing:'ease' },
+    ];
+    const PM = Object.fromEntries(PRESETS.map(p => [p.id, p]));
+
+    const PRESET_COLORS = {
+      instant:'#e03131', swift:'#e8590c', conversational:'#2f9e44',
+      deliberate:'#1971c2', grounded:'#e67700', intimate:'#c2255c',
+      dreamy:'#6741d9', poetic:'#0c8599', reverent:'#2b8a3e', meditative:'#9c36b5',
+    };
+
+    // ── Fonts ────────────────────────────────────────────────────────────────
+    const FONTS = [
+      { id:'system',    name:'System',    css:'-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', google:null },
+      { id:'inter',     name:'Inter',     css:'"Inter", sans-serif',                                         google:'Inter:wght@400;500' },
+      { id:'georgia',   name:'Georgia',   css:'Georgia, "Times New Roman", serif',                           google:null },
+      { id:'playfair',  name:'Playfair',  css:'"Playfair Display", Georgia, serif',                          google:'Playfair+Display:wght@400;700' },
+      { id:'mono',      name:'Mono',      css:'"Courier New", Courier, monospace',                           google:null },
+    ];
+
+    // ── Core ─────────────────────────────────────────────────────────────────
+    function tokenize(text) {
+      const tokens = [];
+      text.split(/\n\n+/).forEach((para, i) => {
+        if (i > 0) tokens.push({ type:'break' });
+        para.split(/\s+/).filter(Boolean).forEach(w => tokens.push({ type:'word', text:w }));
+      });
+      return tokens;
+    }
+
+    function extractWordTimings(alignment) {
+      const { characters, character_start_times_seconds } = alignment;
+      const words = [];
+      let word = '', t0 = 0;
+      for (let i = 0; i < characters.length; i++) {
+        const ch = characters[i];
+        if (/\s/.test(ch)) {
+          if (word) { words.push({ text:word, startTime:t0 }); word = ''; }
+        } else {
+          if (!word) t0 = character_start_times_seconds[i];
+          word += ch;
+        }
+      }
+      if (word) words.push({ text:word, startTime:t0 });
+      return words;
+    }
+
+    // wordPresets: Map<wordIndex, presetId>
+    function buildSchedule(tokens, ttsWords, globalPreset, wordPresets) {
+      const schedule = [];
+      let wi = 0, idx = 0;
+      tokens.forEach(token => {
+        if (token.type === 'break') {
+          schedule.push({ type:'break', delay: globalPreset.paragraphPause }); return;
+        }
+        const preset = PM[wordPresets[idx]] || globalPreset;
+        idx++;
+        const curr = ttsWords[wi], next = ttsWords[wi + 1];
+        wi++;
+        let delay;
+        if (next) {
+          const raw = Math.round((next.startTime - curr.startTime) * 1000);
+          delay = Math.max(preset.minWordDelay, Math.round(raw * (1 + raw / preset.delayDivisor) * preset.globalMultiplier));
+        } else {
+          delay = preset.lastWordDelay;
+        }
+        schedule.push({ type:'word', text:token.text, delay, presetId:preset.id });
+      });
+      return schedule;
+    }
+
+    // ── State ────────────────────────────────────────────────────────────────
+    let cachedTiming  = null;
+    let wordPresets   = {};
+    let curPreset     = PM[CFG.defaultPreset || 'conversational'] || PM.conversational;
+    let current       = null;
+    let annoTokens    = [];
+    let selStart = -1, selEnd = -1, isSel = false;
+
+    // ── DOM ──────────────────────────────────────────────────────────────────
+    const $  = id => document.getElementById(id);
+    const apiKeyEl   = $('apiKey');
+    const fetchBtn   = $('fetchBtn');
+    const inputEl    = $('input');
+    const playBtn    = $('playBtn');
+    const resetBtn   = $('resetBtn');
+    const outputEl   = $('output');
+    const statusEl   = $('status');
+    const presetRow  = $('presetRow');
+    const presetDesc = $('presetDesc');
+    const editView   = $('editView');
+    const editBtn    = $('editBtn');
+    const annoView   = $('annotateView');
+    const annoBtn    = $('annotateBtn');
+    const annoEditor = $('annotateEditor');
+    const annoBar    = $('annoBar');
+    const annoHint   = $('annoHint');
+    const clearSelBtn= $('clearSelBtn');
+    const exportBtn  = $('exportBtn');
+    const importBtn  = $('importBtn');
+    const importFile = $('importFile');
+    const fontRow    = $('fontRow');
+
+    // ── Status ───────────────────────────────────────────────────────────────
+    function setStatus(msg, type) {
+      statusEl.textContent = msg;
+      statusEl.className = type || '';
+    }
+
+    // ── Global preset UI ─────────────────────────────────────────────────────
+    function applyGlobalPreset(p) {
+      curPreset = p;
+      presetDesc.textContent = p.description;
+      presetRow.querySelectorAll('.pill').forEach(el =>
+        el.classList.toggle('active', el.dataset.id === p.id)
+      );
+    }
+
+    function initPresets() {
+      PRESETS.forEach(p => {
+        const b = document.createElement('button');
+        b.className = 'pill'; b.dataset.id = p.id; b.textContent = p.name;
+        b.onclick = () => applyGlobalPreset(p);
+        presetRow.appendChild(b);
+      });
+      applyGlobalPreset(curPreset);
+    }
+
+    // ── Font selector ────────────────────────────────────────────────────────
+    const loadedFonts = new Set();
+
+    function applyFont(font) {
+      if (font.google && !loadedFonts.has(font.id)) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = `https://fonts.googleapis.com/css2?family=${font.google}&display=swap`;
+        document.head.appendChild(link);
+        loadedFonts.add(font.id);
+      }
+      document.documentElement.style.setProperty('--output-font', font.css);
+      fontRow.querySelectorAll('.pill').forEach(el =>
+        el.classList.toggle('active', el.dataset.id === font.id)
+      );
+    }
+
+    function initFonts() {
+      FONTS.forEach(f => {
+        const b = document.createElement('button');
+        b.className = 'pill'; b.dataset.id = f.id; b.textContent = f.name;
+        b.onclick = () => applyFont(f);
+        fontRow.appendChild(b);
+      });
+      fontRow.querySelector('[data-id="system"]').classList.add('active');
+    }
+
+    // ── Annotation toolbar buttons ────────────────────────────────────────────
+    function initAnnoBar() {
+      PRESETS.forEach(p => {
+        const b = document.createElement('button');
+        b.className = 'ab'; b.dataset.pid = p.id; b.textContent = p.name;
+        b.style.setProperty('--ac', PRESET_COLORS[p.id]);
+        b.onclick = () => assignPreset(p.id);
+        annoBar.insertBefore(b, annoBar.querySelector('.sep'));
+      });
+    }
+
+    // ── Mode switch ──────────────────────────────────────────────────────────
+    editBtn.onclick = () => {
+      if (Object.keys(wordPresets).length > 0) {
+        if (!confirm('Switching to edit mode clears annotations. Continue?')) return;
+      }
+      wordPresets = {};
+      editView.style.display = 'block';
+      annoView.style.display = 'none';
+      editBtn.classList.add('active');
+      annoBtn.classList.remove('active');
+    };
+
+    annoBtn.onclick = () => {
+      const text = inputEl.value.trim();
+      if (!text) { setStatus('Add text first.', 'error'); return; }
+      editView.style.display = 'none';
+      annoView.style.display = 'block';
+      editBtn.classList.remove('active');
+      annoBtn.classList.add('active');
+      renderAnnoEditor(text);
+    };
+
+    // ── Annotate editor ──────────────────────────────────────────────────────
+    function renderAnnoEditor(text) {
+      annoEditor.innerHTML = '';
+      annoTokens = [];
+      let wi = 0;
+      tokenize(text).forEach(t => {
+        if (t.type === 'break') {
+          annoEditor.appendChild(document.createElement('br'));
+          annoEditor.appendChild(document.createElement('br'));
+          annoTokens.push({ type:'break' });
+        } else {
+          const span = document.createElement('span');
+          span.className = 'wt'; span.dataset.wi = wi; span.textContent = t.text + ' ';
+          annoEditor.appendChild(span);
+          annoTokens.push({ type:'word', wi, el:span });
+          wi++;
+        }
+      });
+      refreshAnnoDisplay();
+    }
+
+    function refreshAnnoDisplay() {
+      annoTokens.forEach(t => {
+        if (t.type !== 'word') return;
+        const pid = wordPresets[t.wi];
+        if (pid) {
+          const c = PRESET_COLORS[pid];
+          t.el.style.setProperty('--ac', c);
+          t.el.style.setProperty('--ab', c + '18');
+          t.el.classList.add('ann');
+        } else {
+          t.el.style.removeProperty('--ac');
+          t.el.style.removeProperty('--ab');
+          t.el.classList.remove('ann');
+        }
+      });
+    }
+
+    annoEditor.addEventListener('mousedown', e => {
+      const s = e.target.closest('.wt'); if (!s) return;
+      isSel = true; selStart = selEnd = +s.dataset.wi;
+      highlightSel(); e.preventDefault();
+    });
+
+    annoEditor.addEventListener('mousemove', e => {
+      if (!isSel) return;
+      const s = e.target.closest('.wt'); if (!s) return;
+      const wi = +s.dataset.wi;
+      if (wi !== selEnd) { selEnd = wi; highlightSel(); }
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (!isSel) return;
+      isSel = false;
+      const n = Math.abs(selEnd - selStart) + 1;
+      annoHint.textContent = selStart > -1
+        ? `${n} word${n > 1 ? 's' : ''} selected — choose a preset above.`
+        : 'Click and drag to select words, then assign a preset above.';
+    });
+
+    function highlightSel() {
+      const lo = Math.min(selStart, selEnd), hi = Math.max(selStart, selEnd);
+      annoTokens.forEach(t => {
+        if (t.type !== 'word') return;
+        t.el.classList.toggle('sel', t.wi >= lo && t.wi <= hi);
+      });
+    }
+
+    function assignPreset(pid) {
+      if (selStart < 0) return;
+      const lo = Math.min(selStart, selEnd), hi = Math.max(selStart, selEnd);
+      for (let i = lo; i <= hi; i++) wordPresets[i] = pid;
+      clearSel(); refreshAnnoDisplay();
+    }
+
+    clearSelBtn.onclick = () => {
+      if (selStart < 0) return;
+      const lo = Math.min(selStart, selEnd), hi = Math.max(selStart, selEnd);
+      for (let i = lo; i <= hi; i++) delete wordPresets[i];
+      clearSel(); refreshAnnoDisplay();
+    };
+
+    function clearSel() {
+      selStart = selEnd = -1;
+      annoTokens.forEach(t => { if (t.type === 'word') t.el.classList.remove('sel'); });
+      annoHint.textContent = 'Click and drag to select words, then assign a preset above.';
+    }
+
+    // ── Export / Import JSON ─────────────────────────────────────────────────
+    exportBtn.onclick = () => {
+      const text = inputEl.value.trim();
+      const data = {
+        version: '3',
+        text,
+        defaultPreset: curPreset.id,
+        voice: VOICE_ID,
+        annotations: Object.entries(wordPresets).map(([wi, pid]) =>
+          ({ wordIndex: +wi, preset: pid })
+        ),
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
+      const a = Object.assign(document.createElement('a'), {
+        href: URL.createObjectURL(blob), download: 'cadence-annotation.json',
+      });
+      a.click(); URL.revokeObjectURL(a.href);
+    };
+
+    importBtn.onclick = () => importFile.click();
+    importFile.onchange = e => {
+      const file = e.target.files[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        try {
+          const d = JSON.parse(ev.target.result);
+          if (!d.text) throw new Error('Missing text field');
+          inputEl.value = d.text;
+          wordPresets = {};
+          (d.annotations || []).forEach(a => { wordPresets[a.wordIndex] = a.preset; });
+          if (d.defaultPreset && PM[d.defaultPreset]) applyGlobalPreset(PM[d.defaultPreset]);
+          // Switch to annotate view
+          editView.style.display = 'none';
+          annoView.style.display = 'block';
+          editBtn.classList.remove('active');
+          annoBtn.classList.add('active');
+          renderAnnoEditor(d.text);
+          // Invalidate timing
+          cachedTiming = null; playBtn.disabled = true;
+          setStatus('Annotation loaded — fetch timing to play.', 'stale');
+        } catch (err) {
+          setStatus(`Import failed: ${err.message}`, 'error');
+        }
+      };
+      reader.readAsText(file);
+      importFile.value = ''; // allow re-importing same file
+    };
+
+    // ── Fetch ────────────────────────────────────────────────────────────────
+    async function fetchTiming() {
+      const apiKey = apiKeyEl.value.trim();
+      const text   = inputEl.value.trim();
+      if (!apiKey) { setStatus('Enter an API key first.', 'error'); return; }
+      if (!text)   { setStatus('Enter some text first.', 'error'); return; }
+      fetchBtn.disabled = true; playBtn.disabled = true; cachedTiming = null;
+      setStatus('Fetching timing from ElevenLabs…', 'loading');
+      try {
+        const res = await fetch(
+          `https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}/with-timestamps`,
+          {
+            method:'POST',
+            headers:{ 'xi-api-key':apiKey, 'Content-Type':'application/json' },
+            body: JSON.stringify({ text, model_id:MODEL_ID, voice_settings:{ stability:0.5, similarity_boost:0.75 } }),
+          }
+        );
+        if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e?.detail?.message || `HTTP ${res.status}`); }
+        const data     = await res.json();
+        const ttsWords = extractWordTimings(data.alignment);
+        const tokens   = tokenize(text);
+        const wc       = tokens.filter(t => t.type === 'word').length;
+        if (ttsWords.length !== wc) console.warn(`Word count mismatch — TTS:${ttsWords.length} tokens:${wc}`);
+        cachedTiming     = { tokens, ttsWords };
+        playBtn.disabled = false;
+        setStatus(`Ready · ${ttsWords.length} words · ${text.length} chars used · switch presets freely`, 'ready');
+      } catch (e) {
+        setStatus(e.message, 'error');
+      } finally {
+        fetchBtn.disabled = false;
+      }
+    }
+
+    // ── Playback ─────────────────────────────────────────────────────────────
+    function reset() {
+      if (current) { current.cancel(); current = null; }
+      outputEl.innerHTML = '';
+    }
+
+    function play() {
+      if (!cachedTiming) return;
+      reset();
+      const schedule = buildSchedule(cachedTiming.tokens, cachedTiming.ttsWords, curPreset, wordPresets);
+      const items = [];
+
+      schedule.forEach(item => {
+        if (item.type === 'break') {
+          outputEl.appendChild(document.createElement('br'));
+          outputEl.appendChild(document.createElement('br'));
+          items.push({ type:'pause', delay:item.delay });
+        } else {
+          const wp   = PM[item.presetId] || curPreset;
+          const span = document.createElement('span');
+          span.className = 'ow';
+          span.style.cssText = `transition:opacity ${wp.transitionMs}ms ${wp.easing},filter ${wp.transitionMs}ms ${wp.easing};filter:blur(${wp.blurPx}px)`;
+          span.textContent = item.text + ' ';
+          outputEl.appendChild(span);
+          items.push({ type:'word', span, delay:item.delay });
+        }
+      });
+
+      let i = 0, tid = null, cancelled = false;
+      function reveal() {
+        if (cancelled || i >= items.length) return;
+        const it = items[i++];
+        if (it.type === 'word') { it.span.style.opacity='1'; it.span.style.filter='blur(0)'; }
+        tid = setTimeout(reveal, it.delay);
+      }
+      reveal();
+      current = { cancel() { cancelled=true; clearTimeout(tid); } };
+    }
+
+    // ── Events ───────────────────────────────────────────────────────────────
+    fetchBtn.onclick = fetchTiming;
+    playBtn.onclick  = play;
+    resetBtn.onclick = reset;
+
+    inputEl.addEventListener('input', () => {
+      if (cachedTiming) {
+        cachedTiming = null; playBtn.disabled = true;
+        setStatus('Text changed — re-fetch timing.', 'stale');
+      }
+    });
+
+    // ── Init ─────────────────────────────────────────────────────────────────
+    if (CFG.apiKey) apiKeyEl.value = CFG.apiKey;
+    initPresets();
+    initAnnoBar();
+    initFonts();
+  </script>
+</body>
+</html>
